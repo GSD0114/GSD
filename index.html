@@ -277,7 +277,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:8px 0;}
   <div class="hdr-group">
     <span class="hdr-label">월물</span>
     <input class="hdr-in" id="monthIn" value="202606" maxlength="6"
-      placeholder="202606" oninput="onMonthChange()">
+      placeholder="202606" oninput="onMonthChangeUser()">
     <span class="hdr-label">만기일</span>
     <span class="hdr-val" id="expiryDisplay">—</span>
   </div>
@@ -546,6 +546,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:8px 0;}
       <input type="number" id="mStrike" placeholder="예: 1250" step="10">
     </div>
     <div class="mform-row">
+      <label>월물</label>
+      <input type="text" id="mMonth" maxlength="6" placeholder="예: 202607"
+        style="font-family:monospace;letter-spacing:1px">
+      <span style="font-size:10px;color:var(--text3);margin-left:6px">비우면 전역 월물 사용</span>
+    </div>
+    <div class="mform-row">
       <label>수량 (±)</label>
       <input type="number" id="mQty" placeholder="매도:-1  매수:+1">
     </div>
@@ -679,6 +685,11 @@ function getExpiry(ym){
   while(KR_HOLIDAYS.has(dateStr(d)) || d.getDay()===0 || d.getDay()===6)
     d.setDate(d.getDate()-1);
   return d;
+}
+
+// 사용자가 직접 월물 입력 시: 기존 포지션 이름은 그대로, 새로 추가할 포지션에만 적용됨
+function onMonthChangeUser(){
+  onMonthChange();
 }
 
 function onMonthChange(){
@@ -1258,6 +1269,14 @@ function openPosModal(p=null,cb=null){
   document.getElementById('mMemo').value=p?p.memo||'':'';
   document.getElementById('mEditId').value=p?p.id:'';
   document.getElementById('mDeleteBtn').style.display=(p&&!cb)?'block':'none'; // 히스토리 모드는 삭제 버튼 숨김
+  // 월물 초기화: 편집 시 기존 이름에서 추출, 신규 시 전역 monthIn 사용
+  const globalMonth=document.getElementById('monthIn').value||'';
+  let posMonth=globalMonth;
+  if(p&&p.name){
+    const m=p.name.match(/\b(20\d{4})\b/);
+    if(m) posMonth=m[1];
+  }
+  document.getElementById('mMonth').value=posMonth;
   onMTypeChange();
   o.classList.add('open');
   document.getElementById('mQty').focus();
@@ -1292,7 +1311,9 @@ function savePosModal(){
   if(!qty||!entry){ alert('수량과 진입단가를 입력하세요'); return; }
   if(type!=='F'&&!strike){ alert('행사가를 입력하세요'); return; }
 
-  const month=document.getElementById('monthIn').value||'';
+  // 모달의 월물 우선, 비어있으면 전역 monthIn 사용
+  const modalMonth=document.getElementById('mMonth').value.trim();
+  const month=modalMonth||document.getElementById('monthIn').value||'';
   const autoName=type==='F'?`F ${month}`:`${type} ${month} ${strike}.0`;
 
   // ── 히스토리 스냅샷 편집 모드: 현재 positions 배열 건드리지 않고 콜백만 호출 ──
@@ -3357,15 +3378,4 @@ function editPerfRecField(rid,field,el){
     <div class="mform-row">
       <label style="min-width:90px">기록 이름</label>
       <input type="text" id="perfRecName" placeholder="예) 1주차 결산"
-        style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:5px;font-size:13px;font-family:inherit;">
-    </div>
-    <div class="mform-row">
-      <label style="min-width:90px">메모</label>
-      <textarea id="perfRecNote" rows="3" placeholder="예) 지수 횡보, 콜 시간가치 소멸 예상"
-        style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:5px;font-size:12px;resize:vertical;font-family:inherit;"></textarea>
-    </div>
-    <div id="perfSavePreview" style="margin-top:4px;font-size:11px;color:var(--text3);padding:8px 10px;background:var(--bg3);border-radius:5px;line-height:1.8"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost btn-sm" onclick="closePerfSaveModal()">취소</button>
-      <button class="btn btn-sm" onclick="savePerfRecord()" style="background:rgba(63,185,80,.3);border:1px solid rgba(63,185,80,.6)">💾 저장</button>
- 
+        style="flex:1;background:var(--bg);b
