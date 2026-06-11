@@ -3378,4 +3378,24 @@ function editPerfRecField(rid,field,el){
     <div class="mform-row">
       <label style="min-width:90px">기록 이름</label>
       <input type="text" id="perfRecName" placeholder="예) 1주차 결산"
-        style="flex:1;background:var(--bg);b
+        style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);
+               padding:6px 10px;border-radius:5px;font-size:13px;font-family:inherit;">
+    </div>
+    <div class="mform-row">
+      <label style="min-width:90px">메모</label>
+      <textarea id="perfRecNote" rows="3" placeholder="예) 1주차 운용 결산, 포지션 조정 내용"
+        style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);
+               padding:8px 10px;border-radius:5px;font-size:12px;resize:vertical;line-height:1.6;
+               font-family:inherit;"></textarea>
+    </div>
+    <div id="perfSavePreview" style="margin-top:4px;font-size:11px;color:var(--text3);
+      padding:8px 10px;background:var(--bg3);border-radius:5px;line-height:1.8"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="closePerfSaveModal()">취소</button>
+      <button class="btn btn-sm" onclick="savePerfRecord()" style="background:rgba(63,185,80,.3);border:1px solid rgba(63,185,80,.6)">📊 저장</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
