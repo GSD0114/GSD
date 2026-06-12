@@ -3152,7 +3152,12 @@ function buildPerfChart(rid){
   });
 }
 
-function openPerfFolderModal(){ document.getElementById('perfFolderOverlay').classList.add('open'); setTimeout(()=>document.getElementById('perfFolderNameIn').focus(),50); }
+function openPerfFolderModal(){
+  const el=document.getElementById('perfFolderOverlay');
+  if(!el){ alert('오류: perfFolderOverlay 요소 없음'); return; }
+  el.classList.add('open');
+  setTimeout(()=>{ const inp=document.getElementById('perfFolderNameIn'); if(inp) inp.focus(); },50);
+}
 function closePerfFolderModal(){ document.getElementById('perfFolderOverlay').classList.remove('open'); document.getElementById('perfFolderNameIn').value=''; }
 function createPerfFolder(){
   const name=document.getElementById('perfFolderNameIn').value.trim();
