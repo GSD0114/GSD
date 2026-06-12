@@ -3398,5 +3398,28 @@ function editPerfRecField(rid,field,el){
   </div>
 </div>
 
+
+<!-- ═══════════ 성과추이 폴더 생성 모달 ═══════════ -->
+<div class="overlay" id="perfFolderOverlay">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-title">
+      📁 성과 폴더 만들기
+      <button class="close-btn" onclick="closePerfFolderModal()">✕</button>
+    </div>
+    <div class="mform-hint">월물별 폴더를 만들어 성과 기록을 관리하세요.<br>예) <strong>2026년 6월물</strong> / <strong>6월 1주차</strong></div>
+    <div class="mform-row">
+      <label>폴더 이름</label>
+      <input type="text" id="perfFolderNameIn" placeholder="예: 2026년 6월물"
+        style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);
+               padding:6px 10px;border-radius:5px;font-size:13px;font-family:inherit;"
+        onkeydown="if(event.key==='Enter')createPerfFolder()">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="closePerfFolderModal()">취소</button>
+      <button class="btn btn-sm" onclick="createPerfFolder()">만들기</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
